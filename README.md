@@ -6,7 +6,7 @@ An interactive visual guide to the modern AI engineering stack, designed for
 Plain-English explanations, validated performance numbers, real-world analogies,
 and a full architecture diagram showing how all 8 tools connect.
 
-🔗 **Live demo:** [yourusername.github.io/ai-architecture-2026](https://yourusername.github.io/ai-architecture-2026)
+🔗 **Live demo:** [sarefin-dev.github.io/ai-arichitecture](https://sarefin-dev.github.io/ai-arichitecture)
 
 ---
 
