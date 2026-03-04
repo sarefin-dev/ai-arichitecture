@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Architecture 2026 — 8 Essential Tools</title>
+<link rel="preconnect" href="https://rsms.me/">
+<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+<style>
+  :root {
+    --blue: #2563eb; --blue-light: #dbeafe; --blue-dark: #1e3a5f;
+    --green: #16a34a; --green-light: #dcfce7; --green-dark: #14532d;
+    --orange: #ea580c; --orange-light: #fff7ed; --orange-dark: #431407;
+    --purple: #7c3aed; --purple-light: #f3e8ff; --purple-dark: #2e1065;
+    --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+    --gray-600: #4b5563; --gray-700: #374151; --gray-900: #111827;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Inter, system-ui, sans-serif;
+    background: #f8fafc;
+    color: var(--gray-900);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1d4ed8 100%);
+    color: white;
+    padding: 36px 40px 28px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
+  .header p  { font-size: 0.9rem; opacity: 0.75; margin-top: 4px; }
+
+  /* ── NAV TABS ── */
+  .nav-wrap {
+    background: white;
+    border-bottom: 2px solid var(--gray-200);
+    padding: 0 40px;
+    overflow-x: auto;
+    white-space: nowrap;
+    position: sticky; top: 91px; z-index: 99;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .nav-wrap::-webkit-scrollbar { height: 4px; }
+  .nav-wrap::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 2px; }
+  .nav { display: inline-flex; gap: 0; }
+  .tab-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 14px 18px;
+    border: none; background: none; cursor: pointer;
+    font-size: 0.82rem; font-weight: 600; color: var(--gray-600);
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s; white-space: nowrap;
+    font-family: inherit;
+  }
+  .tab-btn:hover { color: var(--gray-900); background: var(--gray-50); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab-btn .num {
+    background: var(--gray-200); color: var(--gray-600);
+    border-radius: 50%; width: 20px; height: 20px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700;
+  }
+  .tab-btn.active .num { background: var(--blue-light); color: var(--blue); }
+
+  /* layer color badges on tabs */
+  .tab-btn[data-layer="brain"].active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab-btn[data-layer="data"].active  { color: var(--green); border-bottom-color: var(--green); }
+  .tab-btn[data-layer="infra"].active { color: var(--orange); border-bottom-color: var(--orange); }
+  .tab-btn[data-layer="arch"].active  { color: var(--purple); border-bottom-color: var(--purple); }
+
+  /* ── CONTENT ── */
+  .content { padding: 36px 40px; max-width: 1100px; margin: 0 auto; }
+  .pane { display: none; }
+  .pane.active { display: block; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ── TOOL CARD ── */
+  .tool-card {
+    background: white; border-radius: var(--radius);
+    border: 1.5px solid var(--gray-200);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .tool-header {
+    padding: 28px 32px 24px;
+    border-bottom: 1.5px solid var(--gray-200);
+  }
+  .tool-header-top {
+    display: flex; align-items: flex-start; gap: 16px; margin-bottom: 14px;
+  }
+  .tool-emoji {
+    font-size: 2.8rem; line-height: 1; flex-shrink: 0;
+    background: var(--gray-100); border-radius: 12px;
+    width: 64px; height: 64px; display: flex; align-items: center; justify-content: center;
+  }
+  .tool-title-area { flex: 1; }
+  .tool-name { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+  .tool-tagline { font-size: 1rem; color: var(--gray-600); margin-top: 4px; font-style: italic; }
+  .layer-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.02em;
+    margin-top: 8px;
+  }
+  .layer-brain  { background: var(--blue-light);   color: var(--blue-dark); }
+  .layer-data   { background: var(--green-light);  color: var(--green-dark); }
+  .layer-infra  { background: var(--orange-light); color: var(--orange-dark); }
+  .analogy-box {
+    background: #fffbf0;
+    border: 1.5px solid #fde68a;
+    border-radius: 8px; padding: 12px 16px;
+    font-size: 0.88rem; color: #78350f;
+  }
+  .analogy-box strong { display: block; margin-bottom: 2px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* ── GRID SECTIONS ── */
+  .tool-body { padding: 28px 32px; display: grid; gap: 28px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .section-title {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--gray-600); margin-bottom: 10px;
+  }
+  .use-case-list, .pros-cons-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .use-case-list li {
+    padding: 10px 14px; background: var(--gray-50); border-radius: 8px;
+    font-size: 0.88rem; line-height: 1.5;
+    border-left: 3px solid var(--blue);
+  }
+  .pros-cons-list li {
+    padding: 9px 12px; border-radius: 8px;
+    font-size: 0.85rem; line-height: 1.5;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .pros-cons-list li.pro { background: #f0fdf4; border-left: 3px solid #22c55e; }
+  .pros-cons-list li.con { background: #fff1f2; border-left: 3px solid #f43f5e; }
+  .pros-cons-list li .icon { font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── BOTTOM META ROW ── */
+  .tool-footer {
+    padding: 18px 32px;
+    background: var(--gray-50);
+    border-top: 1.5px solid var(--gray-200);
+    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  }
+  .meta-group { display: flex; flex-direction: column; gap: 2px; }
+  .meta-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-600); }
+  .meta-value { font-size: 0.82rem; color: var(--gray-700); }
+  .resource-links { display: flex; gap: 8px; flex-wrap: wrap; }
+  .resource-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 6px;
+    background: white; border: 1.5px solid var(--gray-200);
+    font-size: 0.78rem; font-weight: 600; color: var(--blue);
+    text-decoration: none; transition: all 0.1s;
+  }
+  .resource-link:hover { background: var(--blue-light); border-color: var(--blue); }
+
+  /* ── ARCHITECTURE PANE ── */
+  .arch-intro { font-size: 1rem; color: var(--gray-600); max-width: 680px; line-height: 1.7; margin-bottom: 32px; }
+  .layer-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 36px; }
+  .layer-card { border-radius: var(--radius); padding: 20px; border: 1.5px solid; }
+  .layer-card-brain  { background: var(--blue-light);   border-color: var(--blue);   }
+  .layer-card-data   { background: var(--green-light);  border-color: var(--green);  }
+  .layer-card-infra  { background: var(--orange-light); border-color: var(--orange); }
+  .layer-card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
+  .layer-card p  { font-size: 0.8rem; line-height: 1.6; }
+  .layer-card .tools-in-layer { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .tool-chip {
+    padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+    background: white; opacity: 0.9;
+  }
+  .layer-card-brain  .tool-chip { color: var(--blue); }
+  .layer-card-data   .tool-chip { color: var(--green); }
+  .layer-card-infra  .tool-chip { color: var(--orange); }
+
+  .diagram-section {
+    background: white; border-radius: var(--radius);
+    border: 1.5px solid var(--gray-200);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    overflow: hidden;
+  }
+  .diagram-header {
+    padding: 18px 24px;
+    background: var(--gray-900); color: white;
+    font-weight: 700; font-size: 0.9rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .diagram-body { padding: 24px; overflow-x: auto; }
+  .diagram-body .mermaid { display: flex; justify-content: center; }
+
+  .flow-legend {
+    padding: 16px 24px;
+    background: var(--gray-50);
+    border-top: 1.5px solid var(--gray-200);
+    display: flex; gap: 20px; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--gray-600); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+  /* ── PERFORMANCE STAT ── */
+  .stat-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 0.78rem; font-weight: 700;
+    background: #fef3c7; color: #92400e;
+    border: 1px solid #fde68a;
+  }
+
+  @media (max-width: 700px) {
+    .header { padding: 20px; }
+    .nav-wrap { padding: 0 12px; }
+    .content { padding: 20px; }
+    .tool-header, .tool-body { padding: 20px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .layer-cards { grid-template-columns: 1fr; }
+    .tool-footer { padding: 14px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏗️ Modern AI Architecture — 8 Essential Tools for 2026</h1>
+  <p>A plain-English guide for architects, developers and technical managers</p>
+</div>
+
+<div class="nav-wrap">
+  <div class="nav" id="nav">
+    <button class="tab-btn active" data-tab="0" data-layer="infra"><span class="num">1</span> 🚄 vLLM</button>
+    <button class="tab-btn" data-tab="1" data-layer="brain"><span class="num">2</span> 🧠 Claude</button>
+    <button class="tab-btn" data-tab="2" data-layer="brain"><span class="num">3</span> 🦜 LangChain</button>
+    <button class="tab-btn" data-tab="3" data-layer="brain"><span class="num">4</span> 🕸️ LangGraph</button>
+    <button class="tab-btn" data-tab="4" data-layer="data"><span class="num">5</span> 🧱 Databricks</button>
+    <button class="tab-btn" data-tab="5" data-layer="data"><span class="num">6</span> 🧲 FAISS</button>
+    <button class="tab-btn" data-tab="6" data-layer="infra"><span class="num">7</span> 🐳 Docker</button>
+    <button class="tab-btn" data-tab="7" data-layer="data"><span class="num">8</span> 🌬️ Airflow</button>
+    <button class="tab-btn" data-tab="8" data-layer="arch"><span class="num">📐</span> Architecture</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ═══ SLIDE 1: vLLM ═══ -->
+  <div class="pane active" id="pane-0">
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-header-top">
+          <div class="tool-emoji">🚄</div>
+          <div class="tool-title-area">
+            <div class="tool-name">vLLM</div>
+            <div class="tool-tagline">"The speed engine that makes AI serve 24× more users on the same hardware"</div>
+            <span class="layer-badge layer-infra">⚙️ Infrastructure &amp; Serving Layer</span>
+          </div>
+        </div>
+        <div class="analogy-box">
+          <strong>🍽️ Restaurant Analogy</strong>
+          Imagine a restaurant that normally serves 1 table at a time. vLLM is like a master kitchen redesign that lets it serve 24 tables simultaneously — same chefs, same food, just way smarter memory management.
+        </div>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="section-title">What it does (plain English)</div>
+          <p style="font-size:0.92rem;line-height:1.7;color:var(--gray-700)">
+            vLLM is not an AI model — it's the <strong>engine that runs your AI model</strong>. It uses a clever memory trick called <em>PagedAttention</em> (inspired by how operating systems manage RAM) to eliminate 60–80% of GPU memory waste found in standard setups. The result: the same GPU hardware can handle dramatically more simultaneous users.
+          </p>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Top Use Cases</div>
+            <ul class="use-case-list">
+              <li>🏢 <strong>Enterprise chatbot APIs</strong> serving thousands of concurrent employees</li>
+              <li>⚡ <strong>Real-time AI features</strong> in products (auto-complete, summarization at scale)</li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title" style="color:var(--orange)">⚡ Validated Performance</div>
+            <div style="padding:14px;background:var(--orange-light);border-radius:8px;border:1.5px solid #fdba74">
+              <div style="font-size:2rem;font-weight:800;color:var(--orange)">24×</div>
+              <div style="font-size:0.82rem;color:var(--orange-dark)">Higher throughput vs. standard HuggingFace Transformers. Source: original UC Berkeley SOSP '23 paper.</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Pros</div>
+            <ul class="pros-cons-list">
+              <li class="pro"><span class="icon">✅</span><span><strong>Massive throughput boost</strong> — handle far more requests with the same GPU</span></li>
+              <li class="pro"><span class="icon">✅</span><span><strong>Memory efficient</strong> — wastes under 4% of GPU memory vs. 60–80% industry average</span></li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title">Cons</div>
+            <ul class="pros-cons-list">
+              <li class="con"><span class="icon">⚠️</span><span><strong>GPU required</strong> — no CPU-only fallback (unlike Ollama)</span></li>
+              <li class="con"><span class="icon">⚠️</span><span><strong>Steeper setup</strong> — more complex than a simple Flask wrapper around a model</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="tool-footer">
+        <div class="meta-group">
+          <span class="meta-label">Alternatives</span>
+          <span class="meta-value">TensorRT-LLM (NVIDIA) · Ollama (dev/local) · TGI (HuggingFace) · Triton Inference Server</span>
+        </div>
+        <div class="meta-group">
+          <span class="meta-label">Resources</span>
+          <div class="resource-links">
+            <a href="https://github.com/vllm-project/vllm" class="resource-link" target="_blank">📦 GitHub</a>
+            <a href="https://vllm.ai" class="resource-link" target="_blank">🌐 Website</a>
+            <a href="https://blog.vllm.ai/2023/06/20/vllm.html" class="resource-link" target="_blank">📄 Original Paper Blog</a>
+            <a href="https://docs.vllm.ai" class="resource-link" target="_blank">📚 Docs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 2: Claude ═══ -->
+  <div class="pane" id="pane-1">
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-header-top">
+          <div class="tool-emoji">🧠</div>
+          <div class="tool-title-area">
+            <div class="tool-name">Claude (Anthropic)</div>
+            <div class="tool-tagline">"The AI reasoning engine that reads 500 pages in a single prompt"</div>
+            <span class="layer-badge layer-brain">🧠 Intelligence Layer</span>
+          </div>
+        </div>
+        <div class="analogy-box">
+          <strong>📚 Book Analogy</strong>
+          Imagine a brilliant analyst who can read your entire codebase, legal contract, or financial report in one sitting — then answer questions about it with near-perfect recall. That's what Claude's 200k token context window lets you do.
+        </div>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="section-title">What it does (plain English)</div>
+          <p style="font-size:0.92rem;line-height:1.7;color:var(--gray-700)">
+            Claude is a family of Large Language Models (LLMs) built by Anthropic. Unlike basic chatbots, it acts as a <strong>reasoning engine</strong>: it can analyze complex documents, write and review code, and follow detailed instructions reliably. Its key architectural advantage for architects is its massive <strong>200,000 token context window</strong> — roughly 500 pages of text — which often eliminates the need for complex RAG pipelines on smaller datasets.
+          </p>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Top Use Cases</div>
+            <ul class="use-case-list">
+              <li>🔄 <strong>Legacy code refactoring</strong> — feed entire old codebases, get modernized output</li>
+              <li>📋 <strong>Document analysis</strong> — legal/financial contract review, regulatory compliance checks</li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title" style="color:var(--blue)">🔑 Key Differentiator</div>
+            <div style="padding:14px;background:var(--blue-light);border-radius:8px;border:1.5px solid #93c5fd">
+              <div style="font-size:1.5rem;font-weight:800;color:var(--blue)">200K tokens</div>
+              <div style="font-size:0.82rem;color:var(--blue-dark)">Context window ≈ 500 pages. Compete with GPT-4o, Gemini Ultra on most coding &amp; reasoning benchmarks (late 2024).</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Pros</div>
+            <ul class="pros-cons-list">
+              <li class="pro"><span class="icon">✅</span><span><strong>Huge context window</strong> — 500-page documents in one call, no chunking needed</span></li>
+              <li class="pro"><span class="icon">✅</span><span><strong>Better instruction following</strong> — less likely to hallucinate or ignore your system prompt</span></li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title">Cons</div>
+            <ul class="pros-cons-list">
+              <li class="con"><span class="icon">⚠️</span><span><strong>Slower on large contexts</strong> — more tokens = more time for first token</span></li>
+              <li class="con"><span class="icon">⚠️</span><span><strong>Smaller plugin ecosystem</strong> — fewer third-party integrations vs. OpenAI</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="tool-footer">
+        <div class="meta-group">
+          <span class="meta-label">Alternatives</span>
+          <span class="meta-value">GPT-4o (OpenAI) · Gemini 1.5 Pro (Google) · Llama 3 (Meta, open-source)</span>
+        </div>
+        <div class="meta-group">
+          <span class="meta-label">Resources</span>
+          <div class="resource-links">
+            <a href="https://docs.anthropic.com" class="resource-link" target="_blank">📚 API Docs</a>
+            <a href="https://claude.ai" class="resource-link" target="_blank">💬 Claude.ai</a>
+            <a href="https://www.anthropic.com/research" class="resource-link" target="_blank">🔬 Research Papers</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 3: LangChain ═══ -->
+  <div class="pane" id="pane-2">
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-header-top">
+          <div class="tool-emoji">🦜</div>
+          <div class="tool-title-area">
+            <div class="tool-name">LangChain</div>
+            <div class="tool-tagline">"The electrical wiring that connects your AI brain to all the data it needs"</div>
+            <span class="layer-badge layer-brain">🧠 Intelligence Layer — Orchestration</span>
+          </div>
+        </div>
+        <div class="analogy-box">
+          <strong>🔌 Wiring Analogy</strong>
+          Claude is the light bulb. Your database is the power socket. LangChain is the electrical wiring that connects them. Without it, you'd write hundreds of lines of glue code by hand; with it, a few lines are all you need.
+        </div>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="section-title">What it does (plain English)</div>
+          <p style="font-size:0.92rem;line-height:1.7;color:var(--gray-700)">
+            LangChain is an <strong>orchestration framework</strong> — the "glue code" layer that connects your AI model to the rest of your system. It provides pre-built connectors (called <em>integrations</em>) to hundreds of tools: databases, vector stores, APIs, and document loaders. Instead of writing custom code to connect Claude to PostgreSQL or FAISS, LangChain provides a standard interface that just works. Best for <strong>linear, step-by-step workflows</strong>.
+          </p>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Top Use Cases</div>
+            <ul class="use-case-list">
+              <li>📄 <strong>"Chat with your PDF"</strong> — upload a document, ask questions about it (classic RAG pipeline)</li>
+              <li>🤖 <strong>Simple AI assistants</strong> that connect to your CRM, database, or internal wiki</li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title" style="color:var(--blue)">🔑 Key Differentiator</div>
+            <div style="padding:14px;background:var(--blue-light);border-radius:8px;border:1.5px solid #93c5fd">
+              <div style="font-size:1.5rem;font-weight:800;color:var(--blue)">500+</div>
+              <div style="font-size:0.82rem;color:var(--blue-dark)">Pre-built integrations — AWS, GCP, Azure, Pinecone, FAISS, Slack, Gmail, and more. Saves weeks of custom code.</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Pros</div>
+            <ul class="pros-cons-list">
+              <li class="pro"><span class="icon">✅</span><span><strong>Rapid integration</strong> — connect AI to almost anything in minutes</span></li>
+              <li class="pro"><span class="icon">✅</span><span><strong>Great for RAG</strong> — built-in tools for retrieval-augmented generation</span></li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title">Cons</div>
+            <ul class="pros-cons-list">
+              <li class="con"><span class="icon">⚠️</span><span><strong>Debugging is hard</strong> — abstraction can hide errors; frustrating for complex pipelines</span></li>
+              <li class="con"><span class="icon">⚠️</span><span><strong>Overkill for simple tasks</strong> — adds unnecessary complexity to basic LLM calls</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="tool-footer">
+        <div class="meta-group">
+          <span class="meta-label">Alternatives</span>
+          <span class="meta-value">LlamaIndex · Microsoft Semantic Kernel · Haystack · LangGraph (for complex flows)</span>
+        </div>
+        <div class="meta-group">
+          <span class="meta-label">Resources</span>
+          <div class="resource-links">
+            <a href="https://www.langchain.com" class="resource-link" target="_blank">🌐 Website</a>
+            <a href="https://python.langchain.com/docs" class="resource-link" target="_blank">📚 Python Docs</a>
+            <a href="https://github.com/langchain-ai/langchain" class="resource-link" target="_blank">📦 GitHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 4: LangGraph ═══ -->
+  <div class="pane" id="pane-3">
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-header-top">
+          <div class="tool-emoji">🕸️</div>
+          <div class="tool-title-area">
+            <div class="tool-name">LangGraph</div>
+            <div class="tool-tagline">"Lets AI loop, retry, and make decisions — like a BPMN engine for agents"</div>
+            <span class="layer-badge layer-brain">🧠 Intelligence Layer — Agentic Workflows</span>
+          </div>
+        </div>
+        <div class="analogy-box">
+          <strong>👨‍🍳 Kitchen Analogy</strong>
+          LangChain is a single chef following a recipe step by step. LangGraph is the <em>head chef</em> of a whole kitchen: it coordinates multiple specialized chefs (agents), tracks what's been done, handles failures, and loops back to fix mistakes — all automatically.
+        </div>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="section-title">What it does (plain English)</div>
+          <p style="font-size:0.92rem;line-height:1.7;color:var(--gray-700)">
+            LangGraph adds <strong>state, loops, and conditional branching</strong> to AI workflows. Where LangChain handles simple A→B→C pipelines, LangGraph handles cycles: Write code → Run tests → See errors → Fix code → Run tests again. It's built on <em>state machines</em> (think: a flowchart where paths depend on runtime conditions). This makes it the right choice for autonomous AI agents in production.
+          </p>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Top Use Cases</div>
+            <ul class="use-case-list">
+              <li>💻 <strong>Coding agents</strong> — write code, run tests, see errors, fix, repeat automatically</li>
+              <li>🎧 <strong>Customer support bots</strong> that verify identity, loop back, escalate or resolve</li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title" style="color:var(--blue)">🔑 Key Differentiator</div>
+            <div style="padding:14px;background:var(--blue-light);border-radius:8px;border:1.5px solid #93c5fd">
+              <div style="font-size:1.1rem;font-weight:800;color:var(--blue)">Loops + State</div>
+              <div style="font-size:0.82rem;color:var(--blue-dark)">Can pause, resume, and retry long-running agent workflows. Essential for production-grade autonomous AI systems.</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Pros</div>
+            <ul class="pros-cons-list">
+              <li class="pro"><span class="icon">✅</span><span><strong>Handles complexity</strong> — loops, branching & multi-agent coordination in one framework</span></li>
+              <li class="pro"><span class="icon">✅</span><span><strong>Built-in persistence</strong> — pause and resume long workflows without losing state</span></li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title">Cons</div>
+            <ul class="pros-cons-list">
+              <li class="con"><span class="icon">⚠️</span><span><strong>Steeper learning curve</strong> — requires understanding graph theory (nodes, edges, state)</span></li>
+              <li class="con"><span class="icon">⚠️</span><span><strong>Overkill for simple tasks</strong> — use LangChain if your workflow is linear</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="tool-footer">
+        <div class="meta-group">
+          <span class="meta-label">Alternatives</span>
+          <span class="meta-value">AutoGen (Microsoft) · CrewAI · Temporal.io (general workflows) · LangFlow (visual/no-code)</span>
+        </div>
+        <div class="meta-group">
+          <span class="meta-label">Resources</span>
+          <div class="resource-links">
+            <a href="https://langchain-ai.github.io/langgraph/" class="resource-link" target="_blank">📚 Docs</a>
+            <a href="https://github.com/langchain-ai/langgraph" class="resource-link" target="_blank">📦 GitHub</a>
+            <a href="https://www.langchain.com/langgraph" class="resource-link" target="_blank">🌐 Website</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 5: Databricks ═══ -->
+  <div class="pane" id="pane-4">
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-header-top">
+          <div class="tool-emoji">🧱</div>
+          <div class="tool-title-area">
+            <div class="tool-name">Databricks</div>
+            <div class="tool-tagline">"Enterprise data warehouse + ML training platform in a single unified lakehouse"</div>
+            <span class="layer-badge layer-data">🗄️ Data &amp; Memory Layer</span>
+          </div>
+        </div>
+        <div class="analogy-box">
+          <strong>🏭 Factory Analogy</strong>
+          Imagine a factory where raw materials arrive (raw data), are processed on the assembly line (ETL pipelines), become finished products (ML models), and are then tracked in inventory (Unity Catalog governance). Databricks is that entire factory in one building.
+        </div>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="section-title">What it does (plain English)</div>
+          <p style="font-size:0.92rem;line-height:1.7;color:var(--gray-700)">
+            Databricks is the <strong>central data intelligence platform</strong> for enterprises. It combines Apache Spark (big data processing), a data lakehouse (store all your data in open formats), and ML training capabilities into one platform. Its <em>Photon</em> engine accelerates SQL queries by 3–10×. Its <em>Unity Catalog</em> provides governance and lineage tracking — critical for regulated industries like finance and healthcare.
+          </p>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Top Use Cases</div>
+            <ul class="use-case-list">
+              <li>🏢 <strong>Enterprise data lakehouse</strong> — replacing separate warehouses with one unified platform</li>
+              <li>🤖 <strong>AI model training</strong> at petabyte scale, with full governance and lineage tracking</li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title" style="color:var(--green)">⚡ Validated Performance</div>
+            <div style="padding:14px;background:var(--green-light);border-radius:8px;border:1.5px solid #86efac">
+              <div style="font-size:2rem;font-weight:800;color:var(--green)">3–10×</div>
+              <div style="font-size:0.82rem;color:var(--green-dark)">Query speedup with Photon engine vs. standard Spark. Source: Databricks SIGMOD '22 paper &amp; official benchmarks.</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Pros</div>
+            <ul class="pros-cons-list">
+              <li class="pro"><span class="icon">✅</span><span><strong>Unity Catalog</strong> — enterprise governance, compliance &amp; data lineage in one place</span></li>
+              <li class="pro"><span class="icon">✅</span><span><strong>Petabyte scale</strong> — handles massive datasets that no single server could process</span></li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title">Cons</div>
+            <ul class="pros-cons-list">
+              <li class="con"><span class="icon">⚠️</span><span><strong>Expensive</strong> — compute costs escalate quickly; requires careful cluster management</span></li>
+              <li class="con"><span class="icon">⚠️</span><span><strong>Requires Spark knowledge</strong> — PySpark/Scala expertise needed to unlock full potential</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="tool-footer">
+        <div class="meta-group">
+          <span class="meta-label">Alternatives</span>
+          <span class="meta-value">Snowflake · Google BigQuery · AWS SageMaker + Redshift · Azure Synapse</span>
+        </div>
+        <div class="meta-group">
+          <span class="meta-label">Resources</span>
+          <div class="resource-links">
+            <a href="https://www.databricks.com" class="resource-link" target="_blank">🌐 Website</a>
+            <a href="https://docs.databricks.com" class="resource-link" target="_blank">📚 Docs</a>
+            <a href="https://www.databricks.com/product/photon" class="resource-link" target="_blank">⚡ Photon Engine</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 6: FAISS ═══ -->
+  <div class="pane" id="pane-5">
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-header-top">
+          <div class="tool-emoji">🧲</div>
+          <div class="tool-title-area">
+            <div class="tool-name">FAISS</div>
+            <div class="tool-tagline">"Google Search — but for finding similar ideas instead of web pages"</div>
+            <span class="layer-badge layer-data">🗄️ Data &amp; Memory Layer — Vector Search</span>
+          </div>
+        </div>
+        <div class="analogy-box">
+          <strong>📍 Map Analogy</strong>
+          When you search "coffee shops near me", your phone finds nearby places by location coordinates. FAISS does the same thing but with AI concepts: you describe something in words, it finds the most <em>semantically similar</em> items from millions of records — in milliseconds.
+        </div>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="section-title">What it does (plain English)</div>
+          <p style="font-size:0.92rem;line-height:1.7;color:var(--gray-700)">
+            FAISS (by Meta) is a <strong>vector similarity search library</strong>. In AI applications, text is converted to numerical vectors (embeddings). FAISS finds the most similar vectors to your query — like finding which documents are most relevant to a user's question. This powers the "Retrieval" step in RAG (Retrieval Augmented Generation). It's a <em>library</em> (not a database), so it's blazing fast but needs some engineering work around it.
+          </p>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Top Use Cases</div>
+            <ul class="use-case-list">
+              <li>🔍 <strong>RAG pipelines</strong> — find the 5 most relevant documents before sending them to Claude</li>
+              <li>🔁 <strong>Deduplication</strong> — find near-duplicate records in millions of database entries</li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title" style="color:var(--green)">⚡ Performance</div>
+            <div style="padding:14px;background:var(--green-light);border-radius:8px;border:1.5px solid #86efac">
+              <div style="font-size:1.1rem;font-weight:800;color:var(--green)">Billions of vectors</div>
+              <div style="font-size:0.82rem;color:var(--green-dark)">Search 1 billion vectors in milliseconds using IVF or HNSW approximate indexes. GPU acceleration available.</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Pros</div>
+            <ul class="pros-cons-list">
+              <li class="pro"><span class="icon">✅</span><span><strong>Extremely fast</strong> — optimized C++ with optional GPU support; battle-tested at Meta scale</span></li>
+              <li class="pro"><span class="icon">✅</span><span><strong>Free &amp; open-source</strong> — no licensing cost; embeds directly in your application</span></li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title">Cons</div>
+            <ul class="pros-cons-list">
+              <li class="con"><span class="icon">⚠️</span><span><strong>Not a database</strong> — no SQL, no built-in persistence; you manage storage yourself</span></li>
+              <li class="con"><span class="icon">⚠️</span><span><strong>Hard to update</strong> — deleting or modifying one vector often requires re-indexing</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="tool-footer">
+        <div class="meta-group">
+          <span class="meta-label">Alternatives</span>
+          <span class="meta-value">pgvector (PostgreSQL) · Pinecone (managed) · Weaviate · Milvus · Qdrant · Chroma</span>
+        </div>
+        <div class="meta-group">
+          <span class="meta-label">Resources</span>
+          <div class="resource-links">
+            <a href="https://github.com/facebookresearch/faiss" class="resource-link" target="_blank">📦 GitHub</a>
+            <a href="https://faiss.ai" class="resource-link" target="_blank">🌐 Website</a>
+            <a href="https://faiss.ai/cpp_and_python_api/faiss.html" class="resource-link" target="_blank">📚 API Docs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 7: Docker ═══ -->
+  <div class="pane" id="pane-6">
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-header-top">
+          <div class="tool-emoji">🐳</div>
+          <div class="tool-title-area">
+            <div class="tool-name">Docker</div>
+            <div class="tool-tagline">"A standardized shipping container that makes 'it works on my machine' extinct"</div>
+            <span class="layer-badge layer-infra">⚙️ Infrastructure Layer</span>
+          </div>
+        </div>
+        <div class="analogy-box">
+          <strong>🚢 Shipping Container Analogy</strong>
+          Before standardized shipping containers, every port unloaded cargo differently. Docker is the ISO shipping container of software: once you pack your app into a Docker image, it runs identically on any server, cloud, or laptop — no "it worked on my machine" ever again.
+        </div>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="section-title">What it does (plain English)</div>
+          <p style="font-size:0.92rem;line-height:1.7;color:var(--gray-700)">
+            Docker packages your application together with <strong>all its dependencies</strong> (libraries, runtime, config) into a single portable unit called a <em>container</em>. By 2026, Docker is foundational infrastructure — like knowing HTTP. Its specific relevance to AI is packaging LLMs with their exact CUDA driver versions, ensuring the model runs correctly in dev, staging, and production without dependency conflicts.
+          </p>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Top Use Cases</div>
+            <ul class="use-case-list">
+              <li>🤖 <strong>AI model packaging</strong> — bundle LLM + CUDA drivers + vLLM into one deployable unit</li>
+              <li>🏗️ <strong>Microservices isolation</strong> — each service runs independently with its own dependencies</li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title" style="color:var(--orange)">⚡ Performance</div>
+            <div style="padding:14px;background:var(--orange-light);border-radius:8px;border:1.5px solid #fdba74">
+              <div style="font-size:1.1rem;font-weight:800;color:var(--orange)">~Near-native</div>
+              <div style="font-size:0.82rem;color:var(--orange-dark)">Negligible overhead vs. running natively. Far faster and lighter than traditional VMs (no guest OS needed).</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Pros</div>
+            <ul class="pros-cons-list">
+              <li class="pro"><span class="icon">✅</span><span><strong>Reproducibility</strong> — dev, staging, prod behave identically; eliminates environment bugs</span></li>
+              <li class="pro"><span class="icon">✅</span><span><strong>Isolation</strong> — no dependency conflicts between services on the same host</span></li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title">Cons</div>
+            <ul class="pros-cons-list">
+              <li class="con"><span class="icon">⚠️</span><span><strong>Security hardening required</strong> — containers run as root by default; needs proper configuration</span></li>
+              <li class="con"><span class="icon">⚠️</span><span><strong>Image bloat</strong> — base images + dependencies can reach several GB; requires disciplined layering</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="tool-footer">
+        <div class="meta-group">
+          <span class="meta-label">Alternatives / Next Steps</span>
+          <span class="meta-value">Podman (rootless, more secure) · Kubernetes (orchestration at scale) · containerd</span>
+        </div>
+        <div class="meta-group">
+          <span class="meta-label">Resources</span>
+          <div class="resource-links">
+            <a href="https://docs.docker.com" class="resource-link" target="_blank">📚 Docs</a>
+            <a href="https://hub.docker.com" class="resource-link" target="_blank">📦 Docker Hub</a>
+            <a href="https://docs.docker.com/get-started/" class="resource-link" target="_blank">🚀 Get Started Guide</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 8: Airflow ═══ -->
+  <div class="pane" id="pane-7">
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-header-top">
+          <div class="tool-emoji">🌬️</div>
+          <div class="tool-title-area">
+            <div class="tool-name">Apache Airflow</div>
+            <div class="tool-tagline">"A cron job with superpowers — visually orchestrates every step of your data pipelines"</div>
+            <span class="layer-badge layer-data">🗄️ Data &amp; Memory Layer — Pipeline Orchestration</span>
+          </div>
+        </div>
+        <div class="analogy-box">
+          <strong>🎼 Orchestra Analogy</strong>
+          A symphony requires a conductor to tell each musician when to play, in what order, and what to do if something goes wrong. Airflow is the conductor for your data pipelines — it schedules, sequences, and monitors every step, with a full dashboard showing what's happening in real-time.
+        </div>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="section-title">What it does (plain English)</div>
+          <p style="font-size:0.92rem;line-height:1.7;color:var(--gray-700)">
+            Airflow lets you define data workflows as <strong>Python code</strong> using DAGs (Directed Acyclic Graphs — fancy term for "a task list where some tasks depend on others"). You write code to say "every night at 2am: pull data from database → clean it → run ML model → push results to dashboard." Airflow schedules this, retries on failure, and shows you a visual timeline of what ran. Used at scale by Shopify (10,000+ DAGs, 150,000+ daily runs) and Airbnb (who created it).
+          </p>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Top Use Cases</div>
+            <ul class="use-case-list">
+              <li>🔄 <strong>ETL pipelines</strong> — nightly data warehouse refreshes, moving data between systems</li>
+              <li>🤖 <strong>AI model training schedules</strong> — trigger retraining when fresh data arrives</li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title" style="color:var(--green)">⚡ Validated Scale</div>
+            <div style="padding:14px;background:var(--green-light);border-radius:8px;border:1.5px solid #86efac">
+              <div style="font-size:1.1rem;font-weight:800;color:var(--green)">150K+ tasks/day</div>
+              <div style="font-size:0.82rem;color:var(--green-dark)">Shopify runs 10,000+ DAGs with 150,000+ daily task executions on production Airflow. Source: Shopify Engineering Blog.</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="section-title">Pros</div>
+            <ul class="pros-cons-list">
+              <li class="pro"><span class="icon">✅</span><span><strong>Pipeline as code</strong> — workflows in Python means version control, testing, and dynamic generation</span></li>
+              <li class="pro"><span class="icon">✅</span><span><strong>Huge ecosystem</strong> — pre-built operators for AWS, GCP, Azure, Slack, Snowflake, Spark, and more</span></li>
+            </ul>
+          </div>
+          <div>
+            <div class="section-title">Cons</div>
+            <ul class="pros-cons-list">
+              <li class="con"><span class="icon">⚠️</span><span><strong>Scheduler bottleneck</strong> — single-process scheduler can struggle at very high DAG counts; needs tuning</span></li>
+              <li class="con"><span class="icon">⚠️</span><span><strong>DAG learning curve</strong> — the DAG + XCom model can be confusing for beginners</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="tool-footer">
+        <div class="meta-group">
+          <span class="meta-label">Alternatives</span>
+          <span class="meta-value">Prefect · Dagster · Temporal.io · Luigi · AWS Step Functions</span>
+        </div>
+        <div class="meta-group">
+          <span class="meta-label">Resources</span>
+          <div class="resource-links">
+            <a href="https://airflow.apache.org" class="resource-link" target="_blank">🌐 Website</a>
+            <a href="https://airflow.apache.org/docs/" class="resource-link" target="_blank">📚 Docs</a>
+            <a href="https://github.com/apache/airflow" class="resource-link" target="_blank">📦 GitHub</a>
+            <a href="https://www.astronomer.io/docs/learn/" class="resource-link" target="_blank">🎓 Astronomer Learn</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ARCHITECTURE PANE ═══ -->
+  <div class="pane" id="pane-8">
+    <p class="arch-intro">
+      These 8 tools don't live in isolation — they form a complete AI architecture. Here's how they group together by function, and how a real user request flows through all of them.
+    </p>
+
+    <div class="layer-cards">
+      <div class="layer-card layer-card-brain">
+        <h3>🧠 Intelligence Layer — "The Brain"</h3>
+        <p>These tools define <em>how the AI thinks and decides</em>. Claude is the reasoning engine; LangChain connects it to data; LangGraph manages complex multi-step decisions.</p>
+        <div class="tools-in-layer">
+          <span class="tool-chip">🤖 Claude</span>
+          <span class="tool-chip">🦜 LangChain</span>
+          <span class="tool-chip">🕸️ LangGraph</span>
+        </div>
+      </div>
+      <div class="layer-card layer-card-data">
+        <h3>🗄️ Data & Memory Layer — "The Knowledge"</h3>
+        <p>These tools define <em>what the AI knows</em>. FAISS finds relevant facts fast; Databricks stores the big picture; Airflow keeps it all fresh and up to date.</p>
+        <div class="tools-in-layer">
+          <span class="tool-chip">🧲 FAISS</span>
+          <span class="tool-chip">🧱 Databricks</span>
+          <span class="tool-chip">🌬️ Airflow</span>
+        </div>
+      </div>
+      <div class="layer-card layer-card-infra">
+        <h3>⚙️ Infrastructure Layer — "The Engine Room"</h3>
+        <p>These tools define <em>how the AI runs and scales</em>. vLLM serves the model at 24× throughput; Docker packages everything so it deploys anywhere reliably.</p>
+        <div class="tools-in-layer">
+          <span class="tool-chip">⚡ vLLM</span>
+          <span class="tool-chip">🐳 Docker</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="diagram-section">
+      <div class="diagram-header">
+        📐 Architecture Flow Diagram — How a User Request Travels Through All 8 Tools
+      </div>
+      <div class="diagram-body">
+        <pre class="mermaid">
+flowchart TD
+    USER(["👤 User Sends a Request"])
+
+    subgraph INFRA["⚙️ Infrastructure Layer — The Shipping Container"]
+        DOCKER["🐳 Docker\nPackages the entire app so it runs identically anywhere"]
+    end
+
+    subgraph BRAIN["🧠 Intelligence Layer — The Brain"]
+        LC["🦜 LangChain\nConnects AI to tools & databases"]
+        LG["🕸️ LangGraph\nManages loops, retries & decisions"]
+        CL["🤖 Claude / LLM\nThe core reasoning engine"]
+    end
+
+    subgraph DATA["🗄️ Data & Memory Layer — The Knowledge Base"]
+        FAISS["🧲 FAISS\nMillisecond similarity search"]
+        DB["🧱 Databricks\nPetabyte-scale data lakehouse"]
+        AF["🌬️ Airflow\nScheduled pipeline orchestrator"]
+    end
+
+    subgraph SERVE["🚀 Serving Layer — The Speed Engine"]
+        VLLM["⚡ vLLM\nHigh-throughput inference — up to 24x faster"]
+    end
+
+    USER -->|"① Request arrives"| DOCKER
+    DOCKER -->|"② Routes to app"| LC
+    LC -->|"③ Decides what to do"| LG
+    LG -->|"④ Invokes reasoning"| CL
+    CL -->|"Needs relevant facts?"| FAISS
+    CL -->|"Needs big data history?"| DB
+    CL -->|"⑤ Fast model serving"| VLLM
+    VLLM -->|"⑥ Response returned"| USER
+    AF -. "Refreshes data overnight" .-> DB
+    AF -. "Rebuilds vector index" .-> FAISS
+
+    style BRAIN fill:#dbeafe,stroke:#2563eb,color:#1e3a5f
+    style DATA fill:#dcfce7,stroke:#16a34a,color:#14532d
+    style INFRA fill:#fff7ed,stroke:#ea580c,color:#431407
+    style SERVE fill:#f3e8ff,stroke:#7c3aed,color:#2e1065
+        </pre>
+      </div>
+      <div class="flow-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div> Intelligence (Brain)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div> Data &amp; Memory (Knowledge)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ea580c"></div> Infrastructure (Deployment)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div> Serving (Speed)</div>
+        <div class="legend-item" style="font-size:0.78rem">━━ Solid arrows = live request path &nbsp;·&nbsp; ╌╌ Dashed = background jobs</div>
+      </div>
+    </div>
+
+    <!-- Walk-through -->
+    <div style="margin-top:28px;background:white;border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:24px">
+      <div class="section-title" style="margin-bottom:14px">📖 Request Flow — Step by Step</div>
+      <div style="display:grid;gap:10px">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--orange-light);border-radius:8px;border-left:4px solid var(--orange)">
+          <span style="font-weight:800;color:var(--orange);min-width:24px">①②</span>
+          <div><strong>Docker wraps everything.</strong> The user's request enters a containerized environment. Docker ensures every dependency (the right CUDA driver, Python version, library) is present and identical to what was tested.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--blue-light);border-radius:8px;border-left:4px solid var(--blue)">
+          <span style="font-weight:800;color:var(--blue);min-width:24px">③④</span>
+          <div><strong>LangChain + LangGraph route the request.</strong> LangChain connects the query to the right tools. If the task is complex (retry loops, multi-step decisions), LangGraph steps in to manage the stateful workflow.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--green-light);border-radius:8px;border-left:4px solid var(--green)">
+          <span style="font-weight:800;color:var(--green);min-width:24px">↗</span>
+          <div><strong>Claude fetches context from the data layer.</strong> If it needs specific facts → FAISS returns the top matching documents in milliseconds. If it needs historical data → Databricks provides the bigger picture. Airflow runs overnight to keep both up to date.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--purple-light);border-radius:8px;border-left:4px solid var(--purple)">
+          <span style="font-weight:800;color:var(--purple);min-width:24px">⑤⑥</span>
+          <div><strong>vLLM serves the response at scale.</strong> Claude's output runs through vLLM, which manages GPU memory efficiently (PagedAttention) so thousands of concurrent users all get fast responses — not just the first one.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#dbeafe',
+      primaryBorderColor: '#2563eb',
+      primaryTextColor: '#1e3a5f',
+      lineColor: '#6b7280',
+      secondaryColor: '#dcfce7',
+      tertiaryColor: '#fff7ed',
+      fontFamily: 'Inter, system-ui, sans-serif',
+      fontSize: '14px'
+    }
+  });
+
+  // Tab switching
+  document.getElementById('nav').addEventListener('click', e => {
+    const btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    const idx = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('pane-' + idx).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
