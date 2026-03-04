@@ -133,7 +133,7 @@ No npm install, no build pipeline, no framework.
 
 ## 👤 Author
 
-**Sadot Azulay** — Senior Software & Systems Architect  
+**Sadot Arefin** — Senior Software & Systems Architect, Technical Manager  
 Specialising in distributed systems, event-driven microservices and financial technology platforms.
 
 - 🌐 [[sarefin-dev.github.io](https://[sarefin-dev.github.io](https://sarefin-dev.github.io/sarefin-dev))](https://sarefin-dev.github.io/sarefin-dev)
